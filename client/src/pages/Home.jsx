@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext.jsx";
 import logo from "../assets/bytes.png";
+import { FiLogOut } from "react-icons/fi";
+import { AiOutlineSend } from "react-icons/ai";
+import { GrAttachment } from "react-icons/gr";
 
 const Home = () => {
-  const { user } = useContext(UserContext);
+  const { username, id } = useContext(UserContext);
   return (
     <div>
       <div className="flex h-screen antialiased text-gray-800">
@@ -26,34 +29,18 @@ const Home = () => {
                   <div className="ml-2 text-sm font-semibold">Henry Boyd</div>
                 </button>
               </div>
-              <div className="flex flex-row mt-6 items-center bg-indigo-100 border border-gray-200 w-full py-2 px-4 rounded-lg">
-                <div className="w-10 mr-4 rounded-full border overflow-hidden">
+              <div className="flex flex-row mt-6 items-center bg-indigo-100 border border-gray-200 w-full py-1 px-4 rounded-lg">
+                <div className="w-10 mr-6 rounded-full border overflow-hidden">
                   <img
                     src="https://avatars3.githubusercontent.com/u/2763884?s=128"
                     alt="Avatar"
-                    className="h-full w-full"
                   />
                 </div>
-                <div className="text-base font-semibold">Atharva Sardal</div>
+                <div className="text-base font-semibold">{username}</div>
               </div>
               <button className="flex flex-row mt-3 items-center bg-indigo-100 border border-gray-200 w-full py-2 px-4 rounded-lg">
-                <div className="w-12 mr-2 rounded-full border overflow-hidden">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    className="ml-2 text-gray-800"
-                  >
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                  </svg>
+                <div className="w-12 mx-2 rounded-full border overflow-hidden">
+                  <FiLogOut size={25} />
                 </div>
                 <div className="text-base font-semibold">Logout</div>
               </button>
@@ -97,20 +84,7 @@ const Home = () => {
               <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
                 <div>
                   <button className="flex items-center justify-center text-gray-400 hover:text-gray-600">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                      ></path>
-                    </svg>
+                    <GrAttachment size={20} />
                   </button>
                 </div>
                 <div className="flex-grow ml-4">
@@ -119,42 +93,13 @@ const Home = () => {
                       type="text"
                       className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                     />
-                    <button className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                    </button>
                   </div>
                 </div>
                 <div className="ml-4">
                   <button className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0">
                     <span>Send</span>
                     <span className="ml-2">
-                      <svg
-                        className="w-4 h-4 transform rotate-45 -mt-px"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        ></path>
-                      </svg>
+                      <AiOutlineSend size={14} />
                     </span>
                   </button>
                 </div>

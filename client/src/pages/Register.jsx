@@ -1,36 +1,34 @@
 import { React, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/bytes.png";
-import { Link } from "react-router-dom";
-import logoText from "../assets/bytes_text.png";
 import { UserContext } from "../context/UserContext.jsx";
 import axios from "axios";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoginOrRegister, setIsLoginOrRegister] = useState("login");
   const { setUsername: setLoggedInUsername, setId } = useContext(UserContext);
   const navigate = useNavigate();
 
   async function handleSubmit(ev) {
     ev.preventDefault();
-    const { data } = await axios.post("http://localhost:5000/api/register", {
+    const url = isLoginOrRegister === "register" ? "register" : "login";
+    const { data } = await axios.post(`http://localhost:5000/api/${url}`, {
       username,
       password,
     });
     setLoggedInUsername(username);
     setId(data.id);
-    navigate("/signin")
+    navigate("/");
   }
 
   return (
     <div>
-      <div className="min-h-screen bg-green-400 flex justify-center items-center">
-        <div className="absolute w-60 h-60 rounded-xl bg-green-300 -top-5 -left-16 z-0 transform rotate-45 hidden md:block shadow-2xl"></div>
-        <div className="absolute w-48 h-48 rounded-xl bg-green-300 bottom-6 right-10 transform rotate-12 hidden md:block shadow-2xl"></div>
+      <div className="min-h-screen bg-indigo-50 flex justify-center items-center">
         <div className="flex flex-col justify-center items-center">
-          <img src={logoText} className="w-64" />
-          <div className="bg-white pt-2 pb-8 px-10 rounded-2xl shadow-2xl z-20 border-4 border-slate-700 ">
+          <div className="mb-4 italic font-thin text-4xl">bytes</div>
+          <div className="bg-indigo-100 pt-2 pb-8 px-10 rounded-2xl shadow-2xl z-20 border-4 border-slate-700 ">
             <form onSubmit={handleSubmit}>
               <div className="flex justify-center">
                 <img src={logo} className="w-20" />
@@ -55,25 +53,38 @@ const Register = () => {
                 />
               </div>
               <div className="text-center mt-6">
-                <button className="py-3 w-64 text-xl text-white bg-green-400 rounded-2xl border-2 border-slate-700">
-                  Create Account
+                <button className="py-3 w-64 text-xl text-white bg-indigo-500 rounded-2xl border-2 border-slate-700">
+                  {isLoginOrRegister === "register" ? "Register" : "Login"}
                 </button>
-                <p className="mt-4 text-sm flex justify-between">
-                  Already Have An Account?{" "}
-                  <Link to="/signin" className="underline cursor-pointer">
-                    <span className="underline cursor-pointer text-blue-600">
-                      Sign In
-                    </span>
-                  </Link>
+                <p className="mt-4 text-sm">
+                  {isLoginOrRegister === "register" && (
+                    <div className="flex justify-between">
+                      Already a member?
+                      <button
+                        className="mr-1 italic text-indigo-500"
+                        onClick={() => setIsLoginOrRegister("login")}
+                      >
+                        login
+                      </button>
+                    </div>
+                  )}
+                  {isLoginOrRegister === "login" && (
+                    <div className="flex justify-between">
+                      Dont have an account?
+                      <button
+                        className="mr-1 italic text-indigo-500"
+                        onClick={() => setIsLoginOrRegister("register")}
+                      >
+                        register
+                      </button>
+                    </div>
+                  )}
                 </p>
               </div>
             </form>
           </div>
         </div>
       </div>
-
-      <div className="w-40 h-40 absolute bg-green-300 rounded-full top-4 right-12 hidden md:block shadow-2xl"></div>
-      <div className="w-28 h-56 absolute bg-green-300 rounded-full bottom-6 left-12 transform rotate-45 hidden md:block shadow-2xl"></div>
     </div>
   );
 };

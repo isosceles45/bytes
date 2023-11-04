@@ -39,6 +39,7 @@ export const register = async (req, res) => {
           .status(201)
           .json({
             id: createdUser._id,
+            profilePicture: createdUser.profilePicture,
           });
       }
     );
@@ -65,6 +66,7 @@ export const login = async (req, res) => {
             .status(201)
             .json({
               id: foundUser._id,
+              profilePicture: foundUser.profilePicture,
             });
         }
       );
