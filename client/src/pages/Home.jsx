@@ -25,59 +25,6 @@ const Home = () => {
                   </div>
                   <div className="ml-2 text-sm font-semibold">Henry Boyd</div>
                 </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-gray-200 rounded-full">
-                    M
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">Marta Curtis</div>
-                  <div className="flex items-center justify-center ml-auto text-xs text-white bg-green-500 h-4 w-4 rounded-full leading-none"></div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-orange-200 rounded-full">
-                    P
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">
-                    Philip Tucker
-                  </div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-pink-200 rounded-full">
-                    C
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">
-                    Christine Reid
-                  </div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
-                    J
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">Jerry Guzman</div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
-                    J
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">Jerry Guzman</div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
-                    J
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">Jerry Guzman</div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
-                    J
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">Jerry Guzman</div>
-                </button>
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                  <div className="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
-                    J
-                  </div>
-                  <div className="ml-2 text-sm font-semibold">Jerry Guzman</div>
-                </button>
               </div>
               <div className="flex flex-row mt-6 items-center bg-indigo-100 border border-gray-200 w-full py-2 px-4 rounded-lg">
                 <div className="w-10 mr-4 rounded-full border overflow-hidden">
@@ -127,20 +74,7 @@ const Home = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                      <div className="flex flex-row items-center">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          A
-                        </div>
-                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                          <div>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Vel ipsa commodi illum saepe numquam maxime
-                            asperiores voluptate sit, minima perspiciatis.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
                     <div className="col-start-6 col-end-13 p-3 rounded-lg">
                       <div className="flex items-center justify-start flex-row-reverse">
                         <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
@@ -148,57 +82,8 @@ const Home = () => {
                         </div>
                         <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
                           <div>I'm ok what about you?</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                      <div className="flex items-center justify-start flex-row-reverse">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          A
-                        </div>
-                        <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                          <div>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing.
-                            ?
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                      <div className="flex flex-row items-center">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          A
-                        </div>
-                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                          <div>Lorem ipsum dolor sit amet !</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                      <div className="flex items-center justify-start flex-row-reverse">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          A
-                        </div>
-                        <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                          <div>
-                            Lorem ipsum dolor sit, amet consectetur adipisicing.
-                            ?
-                          </div>
                           <div className="absolute text-xs bottom-0 right-0 -mb-5 mr-2 text-gray-500">
                             Seen
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-start-1 col-end-8 p-3 rounded-lg">
-                      <div className="flex flex-row items-center">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                          A
-                        </div>
-                        <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                          <div>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Perspiciatis, in.
                           </div>
                         </div>
                       </div>
