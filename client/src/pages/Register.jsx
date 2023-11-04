@@ -34,7 +34,7 @@ const Register = () => {
                 <img src={logo} className="w-20" />
               </div>
               <h1 className="text-3xl font-bold text-center mb-4">
-                Create An Account
+                {isLoginOrRegister === "register" ? "Create an account" : "Sign In"}
               </h1>
               <div className="space-y-4">
                 <input
