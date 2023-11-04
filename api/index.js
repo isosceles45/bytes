@@ -38,20 +38,34 @@ const server = app.listen(5000, () => {
 const WSServer = new WebSocketServer({ server });
 
 WSServer.on("connection", (connection, req) => {
+  // Get user data from token
   const cookies = req.headers.cookie.split("; ");
-  const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
-  if (tokenCookie) {
-    const token = tokenCookie.split("=")[1];
-    if (token) {
-      jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
-        if (err) throw err;
-        const { userId, username } = userData;
-        connection.userId = userId;
-        connection.username = username;
-      });
+  if (cookies) {
+    const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
+    if (tokenCookie) {
+      const token = tokenCookie.split("=")[1];
+      if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
+          if (err) throw err;
+          const { userId, username } = userData;
+          connection.userId = userId;
+          connection.username = username;
+        });
+      }
     }
   }
 
+  connection.on("message", (message) => {
+    const messageData = JSON.parse(message.toString());
+    const { recipient, text } = messageData;
+    if (recipient && text) {
+      [...WSServer.clients]
+        .filter((c) => c.userId === recipient)
+        .forEach((c) => c.send(JSON.stringify({ text })));
+    }
+  });
+
+  // Send online users to all clients
   [...WSServer.clients].forEach((client) => {
     client.send(
       JSON.stringify({

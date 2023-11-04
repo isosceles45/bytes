@@ -12,10 +12,11 @@ export default function Avatar({ userId, username }) {
   const userIdBase10 = parseInt(userId, 12);
   const colorIndex = userIdBase10 % colors.length;
   const color = colors[colorIndex];
-  console.log(userIdBase10, colorIndex, color);
 
   return (
-    <div className={`flex items-center justify-center h-8 w-8 ${color} rounded-full`}>
+    <div
+      className={`flex items-center justify-center h-8 w-8 ${color} rounded-full`}
+    >
       {username.charAt(0).toUpperCase()}
     </div>
   );
