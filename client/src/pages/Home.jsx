@@ -5,7 +5,8 @@ import { FiLogOut } from "react-icons/fi";
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import Avatar from "../components/Avatar.jsx";
-import { set } from "mongoose";
+import { uniqBy } from "lodash";
+import axios from "axios";
 
 const Home = () => {
   const { username, id } = useContext(UserContext);
@@ -27,7 +28,7 @@ const Home = () => {
     if ("online" in message) {
       showOnlinePeople(message.online);
     } else {
-      setMessages((prev) => [...prev, { isOur: false, text: message.text }]);
+      setMessages((prev) => [...prev, { ...message }]);
     }
   }
 
@@ -41,7 +42,6 @@ const Home = () => {
 
   function sendMessage(ev) {
     ev.preventDefault();
-    console.log("sending message");
     ws.send(
       JSON.stringify({
         recipient: selectedUserId,
@@ -49,11 +49,31 @@ const Home = () => {
       })
     );
     setNewMessageText("");
-    setMessages((prev) => [...prev, { text: newMessageText, isOur: true }]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: newMessageText,
+        sender: id,
+        recipient: selectedUserId,
+        id: Date.now(),
+      },
+    ]);
   }
+
+  useEffect(() => {
+    if (selectedUserId) {
+      axios
+        .get(`http://localhost:5000/api/messages/${selectedUserId}`)
+        .then(({ data }) => {
+          console.log(data);
+        });
+    }
+  }, [selectedUserId]);
 
   const onlinePeopleExcludingCurrUser = { ...onlinePeople };
   delete onlinePeopleExcludingCurrUser[id];
+
+  const messagesWithoutDupes = uniqBy(messages, "id");
 
   return (
     <div>
@@ -121,7 +141,7 @@ const Home = () => {
                             A
                           </div>
                           <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
-                            {messages.map((messages) => (
+                            {messagesWithoutDupes.map((messages) => (
                               <div>{messages.text}</div>
                             ))}
                           </div>
