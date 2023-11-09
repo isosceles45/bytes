@@ -60,6 +60,8 @@ const Home = () => {
     ]);
   }
 
+  console.log(messages.sender, id);
+
   useEffect(() => {
     if (selectedUserId) {
       axios
@@ -133,36 +135,64 @@ const Home = () => {
                       &larr; Select a person to have conversation
                     </div>
                   )}
-                  <div className="bg-green-500 grid grid-cols-12 gap-y-2">
-                    {!!selectedUserId && (
-                      <div className="bg-blue-500 col-start-1 col-end-8 p-3 rounded-lg">
-                        <div className="flex flex-row items-center">
-                          <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                            A
+                  {!!selectedUserId && (
+                    <div>
+                      {messagesWithoutDupes.map((messages) => (
+                        <div className="flex flex-col">
+                          <div
+                            className={
+                              messages.sender === id
+                                ? "flex justify-end items-center p-3 rounded-lg"
+                                : "flex justify-start items-center p-3 rounded-lg"
+                            }
+                          >
+                            <Avatar
+                              userId={
+                                messages.sender === id ? id : selectedUserId
+                              }
+                              username={
+                                messages.sender === id
+                                  ? username
+                                  : onlinePeopleExcludingCurrUser[
+                                      selectedUserId
+                                    ]
+                              }
+                            />
+                            <div
+                              className={
+                                messages.sender === id
+                                  ? "relative ml-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
+                                  : "relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                              }
+                            >
+                              <div>{messages.text}</div>
+                            </div>
                           </div>
-                          <div className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl">
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* {!!selectedUserId && (
+                      <div className="col-start-6 col-end-13 p-3 rounded-lg">
+                        <div className="flex items-center justify-start flex-row-reverse">
+                          <Avatar
+                            userId={selectedUserId}
+                            username={
+                              onlinePeopleExcludingCurrUser[selectedUserId]
+                            }
+                          />
+                          <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
                             {messagesWithoutDupes.map((messages) => (
                               <div>{messages.text}</div>
                             ))}
+                            <div className="absolute text-xs bottom-0 right-0 -mb-5 mr-2 text-gray-500">
+                              Seen
+                            </div>
                           </div>
                         </div>
                       </div>
-                    )}
-
-                    {/* <div className="bg-red-500 col-start-6 col-end-13 p-3 rounded-lg">
-                    <div className="flex items-center justify-start flex-row-reverse">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                        A
-                      </div>
-                      <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                        <div>I'm ok what about you?</div>
-                        <div className="absolute text-xs bottom-0 right-0 -mb-5 mr-2 text-gray-500">
-                          Seen
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
-                  </div>
+                    )} */}
                 </div>
               </div>
               {!!selectedUserId && (
