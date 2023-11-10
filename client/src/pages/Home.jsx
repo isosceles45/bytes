@@ -172,27 +172,6 @@ const Home = () => {
                       ))}
                     </div>
                   )}
-
-                  {/* {!!selectedUserId && (
-                      <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                        <div className="flex items-center justify-start flex-row-reverse">
-                          <Avatar
-                            userId={selectedUserId}
-                            username={
-                              onlinePeopleExcludingCurrUser[selectedUserId]
-                            }
-                          />
-                          <div className="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
-                            {messagesWithoutDupes.map((messages) => (
-                              <div>{messages.text}</div>
-                            ))}
-                            <div className="absolute text-xs bottom-0 right-0 -mb-5 mr-2 text-gray-500">
-                              Seen
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )} */}
                 </div>
               </div>
               {!!selectedUserId && (
