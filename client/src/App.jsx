@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import axios from "axios";
+import "./App.css";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:5000";

@@ -1,15 +1,18 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "../context/UserContext.jsx";
 import logo from "../assets/bytes.png";
 import { FiLogOut } from "react-icons/fi";
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment } from "react-icons/gr";
 import Avatar from "../components/Avatar.jsx";
-import { uniqBy } from "lodash";
+import { set, uniqBy } from "lodash";
 import axios from "axios";
 
 const Home = () => {
   const { username, id } = useContext(UserContext);
+
+  const messagesContainerRef = useRef(null);
+
   const [onlinePeople, setOnlinePeople] = useState({});
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [newMessageText, setNewMessageText] = useState("");
@@ -18,10 +21,21 @@ const Home = () => {
   const [ws, setWs] = useState(null);
 
   useEffect(() => {
+    connectToWS();
+  }, []);
+
+  function connectToWS() {
     const ws = new WebSocket("ws://localhost:5000");
     setWs(ws);
     ws.addEventListener("message", handleMessage);
-  }, []);
+    ws.addEventListener("close", () =>
+      setTimeout(() => {
+        console.log("reconnecting...");
+        connectToWS();
+      }, 1000)
+    );
+    setWs(ws);
+  }
 
   function handleMessage(ev) {
     const message = JSON.parse(ev.data);
@@ -55,7 +69,7 @@ const Home = () => {
         text: newMessageText,
         sender: id,
         recipient: selectedUserId,
-        id: Date.now(),
+        _id: Date.now(),
       },
     ]);
   }
@@ -65,15 +79,57 @@ const Home = () => {
       axios
         .get(`http://localhost:5000/api/messages/${selectedUserId}`)
         .then(({ data }) => {
-          console.log(data);
+          setMessages(data);
         });
     }
   }, [selectedUserId]);
 
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const onlinePeopleExcludingCurrUser = { ...onlinePeople };
   delete onlinePeopleExcludingCurrUser[id];
 
-  const messagesWithoutDupes = uniqBy(messages, "id");
+  const categorizeMessagesByDate = (messages) => {
+    const categorizedMessages = [];
+    let currentDate = null;
+
+    messages.forEach((message) => {
+      const messageDate = new Date(message.createdAt).toLocaleDateString();
+
+      if (messageDate !== currentDate) {
+        currentDate = messageDate;
+        categorizedMessages.push({
+          type: "dateLabel",
+          date: messageDate,
+        });
+      }
+
+      categorizedMessages.push(message);
+    });
+
+    return categorizedMessages;
+  };
+
+  const getDateLabel = (messageDate) => {
+    const today = new Date().toLocaleDateString();
+    const yesterday = new Date(Date.now() - 86400000).toLocaleDateString(); // 86400000 milliseconds = 1 day
+
+    if (messageDate === today) {
+      return "Today";
+    } else if (messageDate === yesterday) {
+      return "Yesterday";
+    } else {
+      return messageDate;
+    }
+  };
+
+  const messagesWithoutDupes = uniqBy(messages, "_id");
+  const categorizedMessages = categorizeMessagesByDate(messagesWithoutDupes);
 
   return (
     <div>
@@ -126,48 +182,61 @@ const Home = () => {
           </div>
           <div className="flex flex-col flex-auto h-full p-6">
             <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-              <div className="flex flex-col h-full overflow-x-auto mb-4">
+              <div
+                className="flex flex-col h-full overflow-x-auto mb-4"
+                ref={messagesContainerRef}
+              >
                 <div className="flex flex-col h-full">
-                  {!selectedUserId && (
-                    <div className="text-gray-400 font-normal h-full flex flex-grow justify-center items-center">
-                      &larr; Select a person to have conversation
-                    </div>
-                  )}
                   {!!selectedUserId && (
                     <div>
-                      {messagesWithoutDupes.map((messages) => (
-                        <div className="flex flex-col">
-                          <div
-                            className={
-                              messages.sender === id
-                                ? "flex justify-end items-center p-3 rounded-lg"
-                                : "flex justify-start items-center p-3 rounded-lg"
-                            }
-                          >
-                            <Avatar
-                              userId={
-                                messages.sender === id ? id : selectedUserId
-                              }
-                              username={
-                                messages.sender === id
-                                  ? username
-                                  : onlinePeopleExcludingCurrUser[
-                                      selectedUserId
-                                    ]
-                              }
-                            />
+                      {categorizedMessages.map((item, index) => {
+                        if (item.type === "dateLabel") {
+                          return (
+                            <div key={index} className="text-center my-2">
+                              {getDateLabel(item.date)}
+                            </div>
+                          );
+                        } else {
+                          const message = item;
+                          const messageTime = new Date(
+                            message.createdAt
+                          ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          });
+                          return (
                             <div
                               className={
-                                messages.sender === id
-                                  ? "relative ml-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
-                                  : "relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                                message.sender === id
+                                  ? "flex justify-end items-center p-3 rounded-lg"
+                                  : "flex justify-start items-center p-3 rounded-lg"
                               }
+                              key={index}
                             >
-                              <div>{messages.text}</div>
+                              {message.sender !== id && (
+                                <Avatar
+                                  userId={selectedUserId}
+                                  username={
+                                    onlinePeopleExcludingCurrUser[
+                                      selectedUserId
+                                    ]
+                                  }
+                                />
+                              )}
+                              <div
+                                className={
+                                  message.sender === id
+                                    ? "relative ml-3 text-sm bg-indigo-300 py-2 px-4 shadow rounded-xl"
+                                    : "relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                                }
+                              >
+                                <div>{message.text}</div>
+                                <div>{messageTime}</div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      ))}
+                          );
+                        }
+                      })}
                     </div>
                   )}
                 </div>
