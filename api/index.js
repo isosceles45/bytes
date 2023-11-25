@@ -41,6 +41,8 @@ const server = app.listen(5000, () => {
 const WSServer = new WebSocketServer({ server });
 
 WSServer.on("connection", (connection, req) => {
+
+  // Read username and id from the cookie for this connection
   const cookies = req.headers.cookie;
   if (cookies) {
     const tokenCookie = cookies

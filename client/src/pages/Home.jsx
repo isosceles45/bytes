@@ -60,8 +60,6 @@ const Home = () => {
     ]);
   }
 
-  console.log(messages.sender, id);
-
   useEffect(() => {
     if (selectedUserId) {
       axios
