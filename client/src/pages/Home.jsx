@@ -14,6 +14,7 @@ const Home = () => {
   const messagesContainerRef = useRef(null);
 
   const [onlinePeople, setOnlinePeople] = useState({});
+  const [offlinePeople, setOfflinePeople] = useState({});
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [newMessageText, setNewMessageText] = useState("");
   const [messages, setMessages] = useState([]);
@@ -39,10 +40,15 @@ const Home = () => {
 
   function handleMessage(ev) {
     const message = JSON.parse(ev.data);
+    console.log(message);
     if ("online" in message) {
       showOnlinePeople(message.online);
     } else {
-      setMessages((prev) => [...prev, { ...message }]);
+      const messageWithDate = {
+        ...message,
+        createdAt: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, messageWithDate]);
     }
   }
 
@@ -70,6 +76,7 @@ const Home = () => {
         sender: id,
         recipient: selectedUserId,
         _id: Date.now(),
+        createdAt: new Date().toISOString(),
       },
     ]);
   }
@@ -90,6 +97,23 @@ const Home = () => {
         messagesContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/people").then((res) => {
+      const allPeople = res.data;
+
+      const offlinePeopleArr = allPeople.filter(
+        (person) => person._id !== id && !onlinePeople[person._id]
+      );
+
+      const offlinePeopleObject = {};
+
+      offlinePeopleArr.forEach((person) => {
+        offlinePeopleObject[person._id] = person;
+      });
+      setOfflinePeople(offlinePeopleObject);
+    });
+  }, [onlinePeople]);
 
   const onlinePeopleExcludingCurrUser = { ...onlinePeople };
   delete onlinePeopleExcludingCurrUser[id];
@@ -128,6 +152,8 @@ const Home = () => {
     }
   };
 
+  console.log(onlinePeopleExcludingCurrUser, offlinePeople);
+
   const messagesWithoutDupes = uniqBy(messages, "_id");
   const categorizedMessages = categorizeMessagesByDate(messagesWithoutDupes);
 
@@ -146,24 +172,46 @@ const Home = () => {
                   <span className="font-bold text-base">Conversations</span>
                 </div>
                 <div className="flex flex-col space-y-1 mt-4 -mx-2 h-96 overflow-y-auto">
-                  {Object.keys(onlinePeopleExcludingCurrUser).map((userId) => (
-                    <button
-                      className={
-                        `flex flex-row items-center hover:bg-gray-100 rounded-xl p-2` +
-                        (userId === selectedUserId ? " bg-indigo-100" : "")
-                      }
-                      key={userId}
-                      onClick={() => setSelectedUserId(userId)}
-                    >
-                      <Avatar
-                        userId={userId}
-                        username={onlinePeopleExcludingCurrUser[userId]}
-                      />
-                      <div className="ml-2 text-sm font-semibold">
-                        {onlinePeople[userId]}
-                      </div>
-                    </button>
-                  ))}
+                    {Object.keys(onlinePeopleExcludingCurrUser).map(
+                      (userId) => (
+                        <button
+                          className={
+                            `flex flex-row items-center hover:bg-gray-100 rounded-xl p-2` +
+                            (userId === selectedUserId ? " bg-indigo-100" : "")
+                          }
+                          key={userId}
+                          onClick={() => setSelectedUserId(userId)}
+                        >
+                          <Avatar
+                            online={true}
+                            userId={userId}
+                            username={onlinePeopleExcludingCurrUser[userId]}
+                          />
+                          <div className="ml-2 text-sm font-semibold">
+                            {onlinePeople[userId]}
+                          </div>
+                        </button>
+                      )
+                    )}
+                    {Object.keys(offlinePeople).map((userId) => (
+                      <button
+                        className={
+                          `flex flex-row items-center hover:bg-gray-100 rounded-xl p-2` +
+                          (userId === selectedUserId ? " bg-indigo-100" : "")
+                        }
+                        key={offlinePeople[userId]?._id}
+                        onClick={() => setSelectedUserId(offlinePeople[userId]?._id)}
+                      >
+                        <Avatar
+                          online={false}
+                          userId={offlinePeople[userId]?._id}
+                          username={offlinePeople[userId]?.username}
+                        />
+                        <div className="ml-2 text-sm font-semibold">
+                          {offlinePeople[userId]?.username}
+                        </div>
+                      </button>
+                    ))}
                 </div>
               </div>
               <div className="flex flex-col py-6 bg-white">
@@ -226,12 +274,16 @@ const Home = () => {
                               <div
                                 className={
                                   message.sender === id
-                                    ? "relative ml-3 text-sm bg-indigo-300 py-2 px-4 shadow rounded-xl"
-                                    : "relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"
+                                    ? "relative ml-3 text-sm bg-indigo-300 px-2 py-1 shadow rounded-xl"
+                                    : "relative ml-3 text-sm bg-white px-2 py-1 shadow rounded-xl"
                                 }
                               >
-                                <div>{message.text}</div>
-                                <div>{messageTime}</div>
+                                <div className="px-2 py-1 w-40">
+                                  {message.text}
+                                </div>
+                                <div className="text-xs px-2 text-slate-500 mt-1">
+                                  {messageTime}
+                                </div>
                               </div>
                             </div>
                           );
