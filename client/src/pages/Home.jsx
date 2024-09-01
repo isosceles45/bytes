@@ -31,7 +31,6 @@ const Home = () => {
     ws.addEventListener("message", handleMessage);
     ws.addEventListener("close", () =>
       setTimeout(() => {
-        console.log("reconnecting...");
         connectToWS();
       }, 1000)
     );
@@ -40,7 +39,6 @@ const Home = () => {
 
   function handleMessage(ev) {
     const message = JSON.parse(ev.data);
-    console.log(message);
     if ("online" in message) {
       showOnlinePeople(message.online);
     } else {
@@ -151,8 +149,6 @@ const Home = () => {
       return messageDate;
     }
   };
-
-  console.log(onlinePeopleExcludingCurrUser, offlinePeople);
 
   const messagesWithoutDupes = uniqBy(messages, "_id");
   const categorizedMessages = categorizeMessagesByDate(messagesWithoutDupes);
